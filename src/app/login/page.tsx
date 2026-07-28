@@ -40,7 +40,7 @@ export default function LoginPage() {
         toast.error("Invalid email or password");
         return;
       }
-      toast.success("Welcome back!");
+      toast.success("Welcome back! ");
       const res = await fetch("/api/auth/session");
       const session = await res.json();
       const role = session?.user?.role;
