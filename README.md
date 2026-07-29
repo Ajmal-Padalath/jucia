@@ -1,154 +1,109 @@
-# Orange Flame Kitchen — QR Restaurant Ordering
+import Link from "next/link";
+import {
+  ArrowRight,
+  ChefHat,
+  QrCode,
+  Smartphone,
+  UtensilsCrossed,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
-Full-stack, responsive restaurant food ordering app. Customers scan a table QR code, browse the menu, customize items, place orders, and track status in real time — no account required.
+export default function HomePage() {
+  return (
+    <div className="relative min-h-screen overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(249,115,22,0.18),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(24,24,27,0.08),_transparent_45%)] dark:bg-[radial-gradient(ellipse_at_top_right,_rgba(249,115,22,0.15),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(255,255,255,0.03),_transparent_45%)]" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.035] dark:opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        }}
+      />
 
-## Tech Stack
+      <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
+        <div className="flex items-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white">
+            <UtensilsCrossed className="h-5 w-5" />
+          </div>
+          <span className="font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Orange Flame
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link href="/login">
+            <Button variant="outline" size="sm">
+              Staff Login
+            </Button>
+          </Link>
+        </div>
+      </header>
 
-- **Next.js 16** (App Router) + React 19
-- **Tailwind CSS 4** + custom UI (Shadcn-style)
-- **Prisma** + **SQLite** (local) / **PostgreSQL** (production via Docker)
-- **NextAuth v5** (credentials for Admin / Kitchen / Waiter)
-- **Zustand** (cart & favorites)
-- **React Hook Form** + **Zod**
-- **Socket.io** (real-time order updates)
-- **Stripe** (optional online payment)
-- **QRCode** + **jsPDF** (table QR PNG/PDF)
+      <main className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 pb-20 pt-10 text-center md:pt-20">
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-sm font-medium text-orange-700 dark:border-orange-900 dark:bg-orange-950/50 dark:text-orange-300 animate-float-in">
+          <QrCode className="h-4 w-4" />
+          QR Table Ordering
+        </div>
 
-## Features
+        <h1 className="font-display max-w-3xl text-5xl font-semibold leading-[1.1] tracking-tight text-zinc-900 dark:text-white md:text-7xl animate-float-in">
+          Orange Flame
+          <span className="block text-orange-500">Kitchen</span>
+        </h1>
 
-| Role | Capabilities |
-|------|----------------|
-| **Customer** | QR menu, search/filter, customize, cart, checkout, live order timeline, feedback, coupons |
-| **Kitchen** | Live order cards, accept → prepare → ready → served |
-| **Waiter** | Floor plan, table status, bills, mark served |
-| **Admin** | Stats, menu CRUD, tables, QR codes, orders, reports/CSV |
+        <p className="mt-6 max-w-xl text-lg text-zinc-700 dark:text-zinc-300 animate-float-in">
+          Scan your table QR, browse the menu, customize dishes, and track your
+          order live — no account needed.
+        </p>
 
-## Quick Start
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3 animate-float-in">
+          <Link href="/menu?table=1">
+            <Button size="lg" className="gap-2">
+              Open Demo Menu
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+          <Link href="/login">
+            <Button size="lg" variant="secondary">
+              Kitchen & Admin
+            </Button>
+          </Link>
+        </div>
 
-### 1. Install & seed (SQLite — no Docker needed)
-
-```bash
-npm install
-npx prisma db push
-npm run db:seed
-```
-
-### 2. Run (with Socket.io)
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-### Production PostgreSQL (optional)
-
-```bash
-docker compose up -d
-```
-
-Then set `DATABASE_URL` to your Postgres URL, switch `provider` in `prisma/schema.prisma` to `postgresql`, and re-run `db push` + seed.
-
-## Demo Accounts
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@restaurant.com | admin123 |
-| Kitchen | kitchen@restaurant.com | admin123 |
-| Waiter | waiter@restaurant.com | admin123 |
-
-**Customer demo:** [http://localhost:3000/menu?table=1](http://localhost:3000/menu?table=1)
-
-**Coupon codes:** `WELCOME10`, `FLAT5`
-
-## Key Routes
-
-| URL | Description |
-|-----|-------------|
-| `/` | Landing page |
-| `/menu?table=1` | Customer digital menu |
-| `/cart` | Shopping cart |
-| `/checkout` | Place order |
-| `/order/[id]` | Live order status |
-| `/login` | Staff login |
-| `/kitchen` | Kitchen dashboard |
-| `/waiter` | Waiter floor plan |
-| `/admin` | Admin overview |
-| `/admin/menu` | Menu management |
-| `/admin/tables` | Table management |
-| `/admin/qr` | QR code PNG/PDF download |
-| `/admin/orders` | Order management |
-| `/admin/reports` | Reports + CSV export |
-
-## Project Structure
-
-```
-src/
-  app/
-    menu/           # Customer digital menu
-    cart/           # Shopping cart
-    checkout/       # Place order + payment
-    order/[id]/    # Live order status
-    kitchen/        # Kitchen dashboard
-    waiter/         # Floor / tables
-    admin/          # Admin panels
-    api/            # REST API routes
-  components/       # UI + shared components
-  store/            # Zustand stores
-  lib/              # Auth, Prisma, validations, Stripe
-  hooks/            # Socket provider
-prisma/
-  schema.prisma     # Full data model
-  seed.ts           # Demo restaurant + menu
-server.js           # Custom Next + Socket.io server
-```
-
-## API Overview
-
-| Endpoint | Methods | Description |
-|----------|---------|-------------|
-| `/api/auth/[...nextauth]` | GET, POST | Authentication |
-| `/api/menu` | GET | Menu items (search/filter) |
-| `/api/categories` | GET, POST | Categories |
-| `/api/food-items` | GET, POST, PUT, DELETE | Menu CRUD |
-| `/api/orders` | GET, POST, PATCH | Orders |
-| `/api/tables` | GET, POST, PATCH, DELETE | Tables |
-| `/api/qr` | GET, POST | QR generation |
-| `/api/dashboard` | GET | Admin stats |
-| `/api/reports` | GET | Reports + CSV |
-| `/api/coupons/validate` | POST | Coupon check |
-| `/api/feedback` | POST | Customer rating |
-
-## QR Flow
-
-Each table gets a unique URL:
-
-```
-https://your-domain.com/menu?table=12
-```
-
-Scanning saves the table in the cart session and opens the menu. No login required.
-
-## Stripe (optional)
-
-Set in `.env`:
-
-```
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-```
-
-Choosing **Online Payment** at checkout creates a Stripe Checkout session.
-
-## Production Build
-
-```bash
-npm run build
-npm start
-```
-
-Ensure `AUTH_SECRET`, `DATABASE_URL`, and `NEXT_PUBLIC_APP_URL` are set for your deployment host.
-
-## License
-
-MIT
+        <div className="mt-20 grid w-full max-w-4xl gap-4 sm:grid-cols-3">
+          {[
+            {
+              icon: Smartphone,
+              title: "Scan & Order",
+              desc: "Unique QR per table opens the digital menu instantly.",
+            },
+            {
+              icon: ChefHat,
+              title: "Live Kitchen",
+              desc: "Orders stream to kitchen and waiter dashboards in real time.",
+            },
+            {
+              icon: QrCode,
+              title: "Manage Tables",
+              desc: "Generate QR codes, track tables, and run reports.",
+            },
+          ].map((feature, i) => (
+            <div
+              key={feature.title}
+              className="rounded-2xl border border-zinc-200/80 bg-white/70 p-6 text-left backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/70 animate-float-in"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400">
+                <feature.icon className="h-5 w-5" />
+              </div>
+              <h3 className="font-semibold text-zinc-900 dark:text-white">
+                {feature.title}
+              </h3>
+              <p className="mt-1.5 text-sm text-zinc-600 dark:text-zinc-300">{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
